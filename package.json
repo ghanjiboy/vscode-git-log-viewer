@@ -1,0 +1,60 @@
+{
+  "name": "git-log-viewer",
+  "displayName": "Git Log Viewer",
+  "description": "TortoiseGit-style log dialog for files and folders",
+  "version": "0.4.1",
+  "license": "MIT",
+  "publisher": "ghanjiboy",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ghanjiboy/vscode-git-log-viewer"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "gitLogViewer.showLog",
+        "title": "Show Git Log",
+        "icon": "$(git-commit)"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "gitLogViewer.showLog",
+          "group": "git",
+          "when": "config.git.enabled && gitOpenRepositoryCount != 0"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "gitLogViewer.showLog",
+          "when": "false"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "node esbuild.mjs && cp webview/styles.css dist/webview/styles.css",
+    "watch": "node esbuild.mjs --watch",
+    "lint": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.webview.json",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0",
+    "esbuild": "^0.21.0",
+    "@vscode/vsce": "^2.22.0"
+  }
+}

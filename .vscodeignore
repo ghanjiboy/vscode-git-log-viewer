@@ -1,0 +1,13 @@
+.vscode/**
+src/**
+webview/**
+node_modules/**
+tsconfig.json
+tsconfig.webview.json
+esbuild.mjs
+.gitignore
+install.sh
+build.sh
+*.vsix
+*.bak
+package-lock.json
