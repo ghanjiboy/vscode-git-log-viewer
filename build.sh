@@ -34,4 +34,5 @@ if [ -z "$VSIX" ]; then
     exit 1
 fi
 
+mv vscode-git-log-viewer-*.vsix "$SCRIPT_DIR/_releases/"
 echo "Built: $VSIX"

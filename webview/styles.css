@@ -155,6 +155,35 @@ tr.data-row:hover {
     background: var(--vscode-editorGroupHeader-tabsBackground);
 }
 
+/* Ref pills (inline in message column) */
+.ref-pill {
+    display: inline-block;
+    padding: 0 6px;
+    margin-right: 4px;
+    border-radius: 10px;
+    font-size: 0.8em;
+    line-height: 1.6;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.ref-branch {
+    background: var(--vscode-badge-background);
+    color: var(--vscode-badge-foreground);
+}
+
+.ref-tag {
+    background: rgba(209, 154, 56, 0.25);
+    color: var(--vscode-foreground);
+    border: 1px solid rgba(209, 154, 56, 0.5);
+}
+
+.ref-head {
+    background: rgba(86, 156, 214, 0.25);
+    color: var(--vscode-foreground);
+    border: 1px solid rgba(86, 156, 214, 0.5);
+}
+
 .group-header {
     padding: 4px 8px !important;
     font-weight: 600;

@@ -12,6 +12,7 @@ interface Commit {
     subject: string;
     authorName: string;
     authorDate: string;
+    refs: string;
 }
 
 interface CommitDetail {
@@ -103,7 +104,26 @@ function renderCommits(): void {
 
         const tdMsg = document.createElement('td');
         tdMsg.className = 'col-message';
-        tdMsg.textContent = commit.subject;
+        if (commit.refs) {
+            commit.refs.split(', ').forEach(ref => {
+                const badge = document.createElement('span');
+                const trimmed = ref.trim();
+                if (trimmed.startsWith('tag:')) {
+                    badge.className = 'ref-pill ref-tag';
+                    badge.textContent = trimmed.substring(5);
+                } else if (trimmed.startsWith('HEAD')) {
+                    badge.className = 'ref-pill ref-head';
+                    badge.textContent = trimmed;
+                } else {
+                    badge.className = 'ref-pill ref-branch';
+                    badge.textContent = trimmed;
+                }
+                tdMsg.appendChild(badge);
+            });
+        }
+        const msgText = document.createElement('span');
+        msgText.textContent = commit.subject;
+        tdMsg.appendChild(msgText);
         tdMsg.title = commit.subject;
         tr.appendChild(tdMsg);
 

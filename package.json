@@ -1,13 +1,13 @@
 {
-  "name": "git-log-viewer",
+  "name": "vscode-git-log-viewer",
   "displayName": "Git Log Viewer",
   "description": "TortoiseGit-style log dialog for files and folders",
-  "version": "0.4.3",
+  "version": "0.4.6",
   "license": "MIT",
-  "publisher": "ghanjiboy",
+  "publisher": "andiapps",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ghanjiboy/vscode-git-log-viewer"
+    "url": "https://github.com/andiapps-dev/vscode-git-log-viewer"
   },
   "engines": {
     "vscode": "^1.85.0"

@@ -68,6 +68,7 @@ export function parseLogOutput(out: string): Commit[] {
             subject: parts[2],
             authorName: parts[3],
             authorDate: parts[4],
+            refs: parts[5] || '',
         };
     });
 }
@@ -153,8 +154,8 @@ export class GitService {
     }
 
     async getLog(repoRoot: string, targetPath: string, skip: number, count: number, after?: string, before?: string): Promise<Commit[]> {
-        const format = `%H${RECORD_SEP}%h${RECORD_SEP}%s${RECORD_SEP}%an${RECORD_SEP}%aI`;
-        const args = ['log', `--format=${format}`, `--skip=${skip}`, `-${count}`];
+        const format = `%H${RECORD_SEP}%h${RECORD_SEP}%s${RECORD_SEP}%an${RECORD_SEP}%aI${RECORD_SEP}%D`;
+        const args = ['log', '--decorate=short', `--format=${format}`, `--skip=${skip}`, `-${count}`];
         if (after) args.push(`--since=${after}`);
         if (before) args.push(`--until=${before}`);
         args.push('--', targetPath);

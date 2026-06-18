@@ -11,8 +11,8 @@ const SEP = '\x1e';
 describe('parseLogOutput', () => {
     it('parses standard log output', () => {
         const out = [
-            `abc123${SEP}abc1234${SEP}Fix bug${SEP}Alice${SEP}2026-06-17T10:00:00-04:00`,
-            `def456${SEP}def4567${SEP}Add feature${SEP}Bob${SEP}2026-06-16T09:00:00-04:00`,
+            `abc123${SEP}abc1234${SEP}Fix bug${SEP}Alice${SEP}2026-06-17T10:00:00-04:00${SEP}HEAD -> main`,
+            `def456${SEP}def4567${SEP}Add feature${SEP}Bob${SEP}2026-06-16T09:00:00-04:00${SEP}`,
         ].join('\n');
 
         const result = parseLogOutput(out);
@@ -23,8 +23,10 @@ describe('parseLogOutput', () => {
             subject: 'Fix bug',
             authorName: 'Alice',
             authorDate: '2026-06-17T10:00:00-04:00',
+            refs: 'HEAD -> main',
         });
         expect(result[1].authorName).toBe('Bob');
+        expect(result[1].refs).toBe('');
     });
 
     it('returns empty array for empty output', () => {
@@ -33,9 +35,15 @@ describe('parseLogOutput', () => {
     });
 
     it('handles subjects with special characters', () => {
-        const out = `abc${SEP}abc${SEP}Fix "quotes" & <tags>${SEP}Alice${SEP}2026-01-01T00:00:00Z`;
+        const out = `abc${SEP}abc${SEP}Fix "quotes" & <tags>${SEP}Alice${SEP}2026-01-01T00:00:00Z${SEP}`;
         const result = parseLogOutput(out);
         expect(result[0].subject).toBe('Fix "quotes" & <tags>');
+    });
+
+    it('parses refs with tags and branches', () => {
+        const out = `abc${SEP}abc${SEP}Release${SEP}Alice${SEP}2026-01-01T00:00:00Z${SEP}tag: v1.0, origin/main, main`;
+        const result = parseLogOutput(out);
+        expect(result[0].refs).toBe('tag: v1.0, origin/main, main');
     });
 });
 

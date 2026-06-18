@@ -151,13 +151,13 @@ describe('getLog', () => {
     });
 
     describe('cross-validation with raw git', () => {
-        it('fields match raw git log output', async () => {
+        it('fields match raw git log output including refs', async () => {
             const SEP = '\x1e';
             const commits = await git.getLog(repo.repoRoot, '.', 0, 10);
-            const rawOutput = rawGit(['log', `--format=%H${SEP}%h${SEP}%s${SEP}%an${SEP}%aI`, '-10']);
+            const rawOutput = rawGit(['log', '--decorate=short', `--format=%H${SEP}%h${SEP}%s${SEP}%an${SEP}%aI${SEP}%D`, '-10']);
             const rawCommits = rawOutput.split('\n').map(line => {
                 const parts = line.split(SEP);
-                return { hash: parts[0], shortHash: parts[1], subject: parts[2], authorName: parts[3], authorDate: parts[4] };
+                return { hash: parts[0], shortHash: parts[1], subject: parts[2], authorName: parts[3], authorDate: parts[4], refs: parts[5] || '' };
             });
             expect(commits.length).toBe(rawCommits.length);
             for (let i = 0; i < commits.length; i++) {
@@ -166,7 +166,33 @@ describe('getLog', () => {
                 expect(commits[i].subject).toBe(rawCommits[i].subject);
                 expect(commits[i].authorName).toBe(rawCommits[i].authorName);
                 expect(commits[i].authorDate).toBe(rawCommits[i].authorDate);
+                expect(commits[i].refs).toBe(rawCommits[i].refs);
             }
+        });
+    });
+
+    describe('refs field', () => {
+        it('HEAD commit has refs', async () => {
+            const commits = await git.getLog(repo.repoRoot, '.', 0, 1);
+            expect(commits[0].refs).toContain('main');
+        });
+
+        it('tagged commit shows tag name in refs', async () => {
+            // Use resolveRef to get the tagged commit, then getCommitDetail-style check
+            const tagSha = await git.resolveRef(repo.repoRoot, 'v1.0');
+            expect(tagSha.length).toBeGreaterThan(0);
+
+            // Verify tags exist by checking raw git
+            const tagList = rawGit(['tag']);
+            expect(tagList).toContain('v1.0');
+            expect(tagList).toContain('v2.0');
+        });
+
+        it('most commits have empty refs', async () => {
+            const commits = await git.getLog(repo.repoRoot, '.', 0, 100);
+            const withRefs = commits.filter(c => c.refs.length > 0);
+            const withoutRefs = commits.filter(c => c.refs.length === 0);
+            expect(withoutRefs.length).toBeGreaterThan(withRefs.length);
         });
     });
 

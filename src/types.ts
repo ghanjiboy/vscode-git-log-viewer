@@ -4,6 +4,7 @@ export interface Commit {
     subject: string;
     authorName: string;
     authorDate: string;
+    refs: string;
 }
 
 export interface CommitDetail {
